@@ -1,0 +1,205 @@
+.appShell {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  box-sizing: border-box;
+}
+
+.topBarLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand {
+  font-weight: 650;
+  color: var(--text-h);
+  font-size: 18px;
+}
+
+.subBrand {
+  font-size: 13px;
+  color: var(--text);
+  opacity: 0.8;
+}
+
+.nav {
+  display: flex;
+  gap: 14px;
+}
+
+.navLink {
+  color: var(--text-h);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+}
+
+.navLink:hover {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+}
+
+.content {
+  padding: 20px 24px 40px;
+  width: 100%;
+  box-sizing: border-box;
+  flex: 1 1 auto;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .grid2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  text-align: left;
+}
+
+.cardTitle {
+  margin: 0 0 12px;
+  color: var(--text-h);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 220px;
+}
+
+label {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+input[type='text'],
+input[type='file'],
+select,
+button {
+  font: inherit;
+}
+
+input[type='text'],
+select {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  color: var(--text-h);
+}
+
+button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+button.primary {
+  border-color: rgba(0, 0, 0, 0);
+  background: var(--accent);
+  color: white;
+}
+
+button.danger {
+  border-color: rgba(0, 0, 0, 0);
+  background: color-mix(in srgb, var(--bg) 80%, #ff3b30 20%);
+  color: var(--text-h);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.hint {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.mono {
+  font-family: var(--mono);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border-bottom: 1px solid var(--border);
+  padding: 10px 6px;
+  vertical-align: top;
+}
+
+.table th {
+  color: var(--text-h);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+}
+
+.progressOuter {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  height: 12px;
+}
+
+.progressInner {
+  height: 100%;
+  background: var(--accent);
+}
+
+.alert {
+  border: 1px solid var(--border);
+  background: var(--accent-bg);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+
