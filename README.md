@@ -55,10 +55,19 @@ service cloud.firestore {
         && request.auth.uid in resource.data.participantUids;
 
       match /messages/{messageId} {
-        allow read, write: if request.auth != null
+        allow read: if request.auth != null
           && request.auth.uid in get(
             /databases/$(database)/documents/conversations/$(conversationId)
           ).data.participantUids;
+        allow create: if request.auth != null
+          && request.auth.uid in get(
+            /databases/$(database)/documents/conversations/$(conversationId)
+          ).data.participantUids;
+        allow update: if request.auth != null && (
+          (resource.data.fromUid == request.auth.uid) || 
+          (request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participantUids)
+        );
+        allow delete: if request.auth != null && resource.data.fromUid == request.auth.uid;
       }
     }
 

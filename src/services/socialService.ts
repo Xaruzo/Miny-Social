@@ -14,6 +14,7 @@ import {
   onSnapshot,
   orderBy,
   query,
+  runTransaction,
   serverTimestamp,
   setDoc,
   where,
@@ -61,6 +62,8 @@ export type Message = {
   toUid: string
   text: string
   createdAtMs: number
+  unsentFor?: string[] // array of user uids who unsent this for themselves
+  isUnsent?: boolean // true if unsent for everyone
 }
 
 export type FriendRequest = {
@@ -96,14 +99,17 @@ export async function signOutNow(): Promise<void> {
   await signOut(auth)
 }
 
-function toPublicProfile(user: User): AppUser {
-  return {
+function toPublicProfile(user: User): Partial<AppUser> {
+  const profile: Partial<AppUser> = {
     uid: user.uid,
     displayName: user.displayName || 'Guest User',
-    photoURL: user.photoURL || '',
     email: user.email || '',
     createdAtMs: Date.now(),
   }
+  if (user.photoURL) {
+    profile.photoURL = user.photoURL
+  }
+  return profile
 }
 
 export async function upsertCurrentUserProfile(user: User): Promise<void> {
@@ -258,7 +264,6 @@ export async function updatePost(postId: string, text: string): Promise<void> {
 }
 
 // Better way for toggling like to avoid race conditions or multiple listeners
-import { runTransaction } from 'firebase/firestore'
 
 export async function toggleLikeV2(postId: string, userId: string): Promise<void> {
   const postRef = doc(db, 'posts', postId)
@@ -437,6 +442,27 @@ export function subscribeMessages(
       messages.push({ id: d.id, ...m })
     })
     cb(messages)
+  })
+}
+
+export async function unsendForEveryone(convoId: string, messageId: string): Promise<void> {
+  const msgRef = doc(db, 'conversations', convoId, 'messages', messageId)
+  await setDoc(msgRef, { 
+    isUnsent: true,
+    updatedAtMs: Date.now() 
+  }, { merge: true })
+}
+
+export async function unsendForMe(convoId: string, messageId: string, userId: string): Promise<void> {
+  const msgRef = doc(db, 'conversations', convoId, 'messages', messageId)
+  await runTransaction(db, async (transaction) => {
+    const docSnap = await transaction.get(msgRef)
+    if (!docSnap.exists()) return
+    const data = docSnap.data() as Message
+    const unsentFor = data.unsentFor || []
+    if (!unsentFor.includes(userId)) {
+      transaction.update(msgRef, { unsentFor: [...unsentFor, userId] })
+    }
   })
 }
 
